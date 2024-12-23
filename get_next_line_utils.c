@@ -6,20 +6,24 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:40:25 by zel-ghab          #+#    #+#             */
-/*   Updated: 2024/12/18 17:26:53 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2024/12/23 17:53:36 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_fill(char *buffer, char *stash)
+#include <get_next_line.h>
+
+void	ft_fill(char *buffer, static char *stash)
 {
-	int	i;
+	int		i;
+	static int	j;
 
 	i = 0;
 	while (b[i])
-		stash[i] == buffer[i++];
+		stash[j++] == buffer[i++];
+	stash[j] = ´\0´;
 }
 
-char *	ft_check(char *stash, char *line)
+char *	ft_check(static char *stash, char *line)
 {
 	int	i;
 	int	backslash;
@@ -29,6 +33,7 @@ char *	ft_check(char *stash, char *line)
 		i++;
 	if (stash[i] == ´\n´)
 	{
+		backslash = i;
 		i = 0;
 		while (i < backslash)
 			line[i] == stash[i++];
