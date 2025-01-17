@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:03:58 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/16 19:43:04 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/17 13:33:41 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,11 @@ static char *	ft_update_stock(char * stockage, int n)
 	return (updatestock);
 }
 
-static char *	ft_extract_line(char * stockage)
+static char *	ft_extract_line(char * stockage, int n)
 {
-	int	i;
-	int	n;
 	char *	line;
 
-	i = 0;
-	while (stockage[i] != '\n')
-		i++;
-	n = i;
-	line = ft_substr(stockage, 0, n);
+	line = ft_substr(stockage, 0, n + 1);
 	return (line);
 }
 
@@ -70,7 +64,7 @@ char *	get_next_line(int fd)
 		if (stockage[i] == '\n')
 		{
 			n = i;
-			line = ft_extract_line(stockage);
+			line = ft_extract_line(stockage, n);
 			stockage = ft_update_stock(stockage, n);
 		}
 	}
@@ -88,7 +82,7 @@ int	main(void)
 		perror("Erreur lors de l'ouverture du fichier");
 		return (1);
 	}
-	while ((line = get_next_line(fd) != NULL))
+	while ((line = get_next_line(fd)) != NULL)
 	{
 		printf("%s", line);
 		free(line);
