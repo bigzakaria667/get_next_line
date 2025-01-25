@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:03:58 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/17 13:33:41 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/25 20:00:43 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,18 @@ static char *	ft_update_stock(char * stockage, int n)
 	int	len;
 	char *	updatestock;
 
+	if (!stockage)
+		return (NULL);
 	len = ft_strlen(stockage);
-	if (len > n)
+	if (len > n + 1)
+	{
 		updatestock = ft_substr(stockage, n + 1, len);
+		if (!updatestock)
+			return (NULL);
+	}
 	else
 		updatestock = NULL;
-	return (updatestock);
+	return (free(stockage), stockage = NULL, updatestock);
 }
 
 static char *	ft_extract_line(char * stockage, int n)
@@ -30,16 +36,36 @@ static char *	ft_extract_line(char * stockage, int n)
 	char *	line;
 
 	line = ft_substr(stockage, 0, n + 1);
+	if (!line)
+		return (NULL);
 	return (line);
 }
 
-static char *	ft_concat(char * buffer, char * stockage)
+static char *	ft_concat(char ** stockage, int n)
 {
-	if (!stockage)
-		stockage = ft_strcopydup(buffer, NULL);
+	char *	line;
+
+	line = ft_extract_line(*stockage, n);
+	if (!line)
+		return (NULL);
+	*stockage = ft_update_stock(*stockage, n);
+	return (line);
+}
+
+char *	ft_finder(char ** stockage, char * buffer)
+{
+	int 	i;
+
+	if (!*stockage)
+		*stockage = ft_strcopydup(buffer);
 	else
-		stockage = ft_strjoin(stockage, buffer);
-	return (stockage);
+		*stockage = ft_strjoin(*stockage, buffer);
+	i = 0;
+	while ((*stockage)[i] && (*stockage)[i] != '\n')
+		i++;
+	if ((*stockage)[i] == '\n')
+		return (ft_concat(stockage, i));
+	return (NULL);
 }
 
 char *	get_next_line(int fd)
@@ -47,47 +73,44 @@ char *	get_next_line(int fd)
 	char		buffer[BUFFER_SIZE + 1];
 	char *		line;
 	static char *	stockage;
-	ssize_t		bytes_read;
-	int		n;
-	int		i;
+	int		bytes_read;
 
-	line = NULL;
-	i = 0;
-	while (line == NULL && bytes_read > 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= (long)2147483647 || read(fd, 0, 0) < 0)
+		return (NULL);
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	buffer[bytes_read] = '\0';
+	while (bytes_read != 0)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read > 0)
-			buffer[bytes_read] = '\0';
-		stockage = ft_concat(buffer, stockage);
-		while (stockage[i] && stockage[i] != '\n')
-			i++;
-		if (stockage[i] == '\n')
+		if (bytes_read < 0)
+			return (free(stockage), stockage = NULL, NULL);
+		line = ft_finder(&stockage, buffer);
+		if (line != NULL)
+			return line;
+		if (ft_strlen(stockage) > 0)
 		{
-			n = i;
-			line = ft_extract_line(stockage, n);
-			stockage = ft_update_stock(stockage, n);
+			bytes_read = read(fd, buffer, BUFFER_SIZE);
+			buffer[bytes_read] = '\0';
 		}
 	}
-	return (line);
+	if (stockage && ft_strlen(stockage) > 0)
+		return (line = stockage, stockage = NULL, line);
+	return (free(stockage), stockage = NULL, NULL);
 }
-
-int	main(void)
+/*
+int	main(int ac, char **av)
 {
 	int	fd;
 	char *	line;
 
-	fd = open("test.txt", O_RDONLY);
-	if (fd < 0)
-	{
-		perror("Erreur lors de l'ouverture du fichier");
-		return (1);
-	}
+	(void)ac;
+	fd = open(av[1], O_RDONLY);
 	while ((line = get_next_line(fd)) != NULL)
 	{
 		printf("%s", line);
 		free(line);
+		line = NULL;
 	}
-	free(line);
 	close(fd);
 	return (0);
 }
+*/
