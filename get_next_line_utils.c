@@ -6,11 +6,25 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:40:25 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/24 19:23:09 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/25 21:56:24 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+int	ft_strchr(char *stockage, char a)
+{
+	int i;
+
+	i = 0;
+	if (!stockage)
+		return (0);
+	while (stockage[i] != a && stockage[i])
+		i++;
+	if (stockage[i] == a)
+		return (1);
+	return (0);
+}
 
 char *	ft_substr(char *str, int start, int end)
 {

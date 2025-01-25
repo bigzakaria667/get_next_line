@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:39:46 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/24 20:17:39 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/25 21:52:59 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <fcntl.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 10
 # endif
 
 /*----------------  get_next_line_utils.c  ---------------*/
@@ -28,6 +28,7 @@ char *	ft_substr(char *str, int start, int end);
 int	ft_strlen(char *source);
 char *	ft_strjoin(char *s1, char *s2);
 char *	ft_strcopydup(char *source);
+int	ft_strchr(char *stockage, char a);
 
 /*----------------  get_next_line.c  ---------------*/
 char *	get_next_line(int fd);

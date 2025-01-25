@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:03:58 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/25 20:00:43 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/25 22:29:06 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,19 +76,21 @@ char *	get_next_line(int fd)
 	int		bytes_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= (long)2147483647 || read(fd, 0, 0) < 0)
-		return (NULL);
+		return (free(stockage), stockage = NULL, NULL);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read < 0)
+		return (free(stockage), stockage = NULL, NULL);
 	buffer[bytes_read] = '\0';
-	while (bytes_read != 0)
+	while (bytes_read != 0 || ft_strchr(stockage, '\n'))
 	{
-		if (bytes_read < 0)
-			return (free(stockage), stockage = NULL, NULL);
 		line = ft_finder(&stockage, buffer);
 		if (line != NULL)
 			return line;
-		if (ft_strlen(stockage) > 0)
+		if (!ft_strchr(stockage, '\n'))
 		{
 			bytes_read = read(fd, buffer, BUFFER_SIZE);
+			if (bytes_read < 0)
+				return (free(stockage), stockage = NULL, NULL);
 			buffer[bytes_read] = '\0';
 		}
 	}
