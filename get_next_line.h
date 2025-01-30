@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:39:46 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/30 20:24:56 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:03:35 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,12 @@
 # endif
 
 /*----------------  get_next_line_utils.c  ---------------*/
-
-char *	ft_substr(char *str, int start, int end);
-int	ft_strlen(char *source);
-char *	ft_strjoin(char *s1, char *s2);
-char *	ft_strcopydup(char *source);
-int	ft_strchr(char *stockage, char a);
-
+char	*ft_substr(char *str, int start, int end);
+int		ft_strlen(char *source);
+char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strcopydup(char *source);
+int		ft_strchr(char *stockage, char a);
 /*----------------  get_next_line.c  ---------------*/
-char *	get_next_line(int fd);
+char	*get_next_line(int fd);
 
 #endif
