@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:40:25 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/25 21:56:24 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/30 22:27:26 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ char *	ft_substr(char *str, int start, int end)
 	int	i;
 	char *	substr;
 	
-	if (!str || start >= ft_strlen(str) || start >= end)
+	if (!str)
 		return(NULL);	
+	if (start >= ft_strlen(str) || start >= end)
+		return (free(str), NULL);
 	i = 0;
 	substr = malloc (sizeof(char) * (end - start + 1));
 	if (!substr)
@@ -69,7 +71,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	s2_len = ft_strlen(s2);
 	strjoin = malloc (sizeof(char) * (s1_len + s2_len + 1));
 	if (!strjoin)
-		return (NULL);
+		return (free(s1) ,NULL);
 	i = 0;
 	j = 0;
 	while (s1[i])
@@ -80,7 +82,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[j])
 		strjoin[i++] = s2[j++];
 	strjoin[i] = '\0';
-	return (free(s1), s1 = NULL, strjoin);
+	return (free(s1) ,strjoin);
 }
 
 

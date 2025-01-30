@@ -6,29 +6,29 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:03:58 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/25 22:29:06 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/30 22:31:03 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char *	ft_update_stock(char * stockage, int n)
+static char *	ft_update_stock(char ** stockage, int n)
 {
 	int	len;
 	char *	updatestock;
 
 	if (!stockage)
 		return (NULL);
-	len = ft_strlen(stockage);
+	len = ft_strlen(*stockage);
 	if (len > n + 1)
 	{
-		updatestock = ft_substr(stockage, n + 1, len);
+		updatestock = ft_substr(*stockage, n + 1, len);
 		if (!updatestock)
-			return (NULL);
+			return (free(*stockage), *stockage = NULL ,NULL);
 	}
 	else
 		updatestock = NULL;
-	return (free(stockage), stockage = NULL, updatestock);
+	return (free(*stockage), *stockage = NULL, updatestock);
 }
 
 static char *	ft_extract_line(char * stockage, int n)
@@ -47,8 +47,8 @@ static char *	ft_concat(char ** stockage, int n)
 
 	line = ft_extract_line(*stockage, n);
 	if (!line)
-		return (NULL);
-	*stockage = ft_update_stock(*stockage, n);
+		return (free(*stockage), *stockage = NULL, NULL);
+	*stockage = ft_update_stock(stockage, n);
 	return (line);
 }
 
@@ -60,6 +60,8 @@ char *	ft_finder(char ** stockage, char * buffer)
 		*stockage = ft_strcopydup(buffer);
 	else
 		*stockage = ft_strjoin(*stockage, buffer);
+	if (!*stockage)
+		return (NULL);
 	i = 0;
 	while ((*stockage)[i] && (*stockage)[i] != '\n')
 		i++;
@@ -98,21 +100,3 @@ char *	get_next_line(int fd)
 		return (line = stockage, stockage = NULL, line);
 	return (free(stockage), stockage = NULL, NULL);
 }
-/*
-int	main(int ac, char **av)
-{
-	int	fd;
-	char *	line;
-
-	(void)ac;
-	fd = open(av[1], O_RDONLY);
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		printf("%s", line);
-		free(line);
-		line = NULL;
-	}
-	close(fd);
-	return (0);
-}
-*/
