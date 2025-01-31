@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:03:58 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/30 23:51:55 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/31 18:50:00 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*get_next_line(int fd)
 	static char		*stockage;
 	int				bytes_read;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= (long)2147483647
+	if (fd < 0 || BUFFER_SIZE <= 0 || (long)BUFFER_SIZE > (long)MAXINT
 		|| read(fd, 0, 0) < 0)
 		return (free(stockage), stockage = NULL, NULL);
 	ft_read(fd, &stockage, buffer, &bytes_read);

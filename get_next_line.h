@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:39:46 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/30 23:03:35 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/01/31 18:49:40 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 
 # include <stdio.h>
 # include <stdlib.h>
-# include <unistd.h>
 # include <fcntl.h>
+# include <unistd.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
 # endif
+
+# define MAXINT 2147483647
 
 /*----------------  get_next_line_utils.c  ---------------*/
 char	*ft_substr(char *str, int start, int end);
