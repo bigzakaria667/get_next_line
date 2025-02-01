@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:03:58 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/02/01 21:38:50 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/02/01 21:55:27 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	main()
 	char	*s;
 	int	fd;
 
-	fd = open("test.txt", O_RDONLY);
+	fd = open("Coran.txt", O_RDONLY);
 	while (1)
 	{
 		s = get_next_line(fd);
