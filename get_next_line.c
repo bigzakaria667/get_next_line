@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:03:58 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/31 18:50:00 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/02/01 21:38:50 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,18 @@ static char	*ft_extract_line(char *stockage, int n)
 	return (line);
 }
 
-char	*ft_finder(char **stockage, char *buffer)
+char	*ft_finder(char **stockage, char **buffer, int bytes_read)
 {
 	int		i;
 	char	*line;
 
 	if (!*stockage)
-		*stockage = ft_strcopydup(buffer);
+		*stockage = ft_strcopydup(*buffer, bytes_read);
 	else
-		*stockage = ft_strjoin(*stockage, buffer);
-	if (!*stockage)
+		*stockage = ft_strjoin(*stockage, *buffer, bytes_read);
+	if (!*stockage && *buffer)
+		return (free(*buffer), NULL);
+	else if (!*stockage)
 		return (NULL);
 	i = 0;
 	while ((*stockage)[i] && (*stockage)[i] != '\n')
@@ -66,18 +68,21 @@ char	*ft_finder(char **stockage, char *buffer)
 	return (NULL);
 }
 
-char	*ft_read(int fd, char **stockage, char *buffer, int *bytes_read)
+char	*ft_read(int fd, char **stockage, char **buffer, int *bytes_read)
 {
-	*bytes_read = read(fd, buffer, BUFFER_SIZE);
-	if (*bytes_read < 0)
+	*buffer = malloc (sizeof(char) * BUFFER_SIZE);
+	if (!*buffer)
 		return (free(*stockage), *stockage = NULL, NULL);
-	buffer[*bytes_read] = '\0';
-	return (buffer);
+	*bytes_read = read(fd, *buffer, BUFFER_SIZE);
+	if (*bytes_read < 0)
+		return (free(*stockage), *stockage = NULL, free(*buffer),
+			*buffer = NULL, NULL);
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
 {
-	char			buffer[BUFFER_SIZE + 1];
+	char			*buffer;
 	char			*line;
 	static char		*stockage;
 	int				bytes_read;
@@ -85,16 +90,37 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || (long)BUFFER_SIZE > (long)MAXINT
 		|| read(fd, 0, 0) < 0)
 		return (free(stockage), stockage = NULL, NULL);
-	ft_read(fd, &stockage, buffer, &bytes_read);
+	ft_read(fd, &stockage, &buffer, &bytes_read);
+	if (!buffer)
+		return (free(stockage), stockage = NULL, NULL);
 	while (bytes_read != 0 || ft_strchr(stockage, '\n'))
 	{
-		line = ft_finder(&stockage, buffer);
+		line = ft_finder(&stockage, &buffer, bytes_read);
 		if (line != NULL)
 			return (line);
 		if (!ft_strchr(stockage, '\n'))
-			ft_read(fd, &stockage, buffer, &bytes_read);
+			ft_read(fd, &stockage, &buffer, &bytes_read);
+		if (!buffer)
+			return (free(stockage), stockage = NULL, NULL);
 	}
 	if (stockage && ft_strlen(stockage) > 0)
-		return (line = stockage, stockage = NULL, line);
-	return (free(stockage), stockage = NULL, NULL);
+		return (line = stockage, stockage = NULL, free(buffer), line);
+	return (free(stockage), stockage = NULL, free(buffer), NULL);
 }
+/*
+int	main()
+{
+	char	*s;
+	int	fd;
+
+	fd = open("test.txt", O_RDONLY);
+	while (1)
+	{
+		s = get_next_line(fd);
+		if (!s)
+			break;
+		printf("%s", s);
+		free(s);
+	}
+}
+*/

@@ -6,7 +6,7 @@
 /*   By: zel-ghab <zel-ghab@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:40:25 by zel-ghab          #+#    #+#             */
-/*   Updated: 2025/01/30 23:24:44 by zel-ghab         ###   ########.fr       */
+/*   Updated: 2025/02/01 21:39:33 by zel-ghab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,19 @@ int	ft_strlen(char *source)
 	return (i);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2, int bytes_read)
 {
-	size_t	s1_len;
-	size_t	s2_len;
-	size_t	i;
-	size_t	j;
+	int		s1_len;
+	int		i;
+	int		j;
 	char	*strjoin;
 
-	if (!s1 || !s2)
-		return (NULL);
+	if (!s1 && s2)
+		return (free(s2), NULL);
+	if (!s2 && s1)
+		return (free(s1), NULL);
 	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	strjoin = malloc (sizeof(char) * (s1_len + s2_len + 1));
+	strjoin = malloc (sizeof(char) * (s1_len + bytes_read + 1));
 	if (!strjoin)
 		return (free(s1), NULL);
 	i = 0;
@@ -79,30 +79,28 @@ char	*ft_strjoin(char *s1, char *s2)
 		strjoin[i] = s1[i];
 		i++;
 	}
-	while (s2[j])
+	while (j < bytes_read)
 		strjoin[i++] = s2[j++];
 	strjoin[i] = '\0';
-	return (free(s1), strjoin);
+	return (free(s1), free(s2), strjoin);
 }
 
-char	*ft_strcopydup(char *source)
+char	*ft_strcopydup(char *source, int bytes_read)
 {
 	char	*copy;
 	int		i;
-	int		len;
 
 	if (!source)
 		return (NULL);
-	len = ft_strlen(source);
-	copy = malloc(sizeof(char) * (len + 1));
+	copy = malloc (sizeof(char) * (bytes_read + 1));
 	if (!copy)
 		return (NULL);
 	i = 0;
-	while (source[i])
+	while (i < bytes_read)
 	{
 		copy[i] = source[i];
 		i++;
 	}
 	copy[i] = '\0';
-	return (copy);
+	return (free(source), copy);
 }
